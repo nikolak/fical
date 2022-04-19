@@ -9,13 +9,23 @@ all events that do not have any of the keywords in the event name. Basically it 
 and it filters out events before handing over data to the client.
 
 I wrote this because our company uses personio.com, which is absolute trash when it comes to calendar. Exporting "My Calendar"
-in that Godforsaken app means I export the leaves of every employee, holidays, etc in the iCal. Which I absolutely do not want. 
+in that Godforsaken app means I export the leaves of every employee, holidays, etc in the iCal. Which is kinda shitty, and something I absolutely do not want. 
 Since they refuse to do even the absolute minimum to implement this functionality, and I have multiple use cases for having my 
 own vacations in my calendar app (which doesn't support client side filtering) I wrote this within 30 min over a weekend.
 
 To say that this is not intended for any kind of production/scalable environment would be an understatement, but that being said
 it does work for me without any issues - so I decided to add a small web UI for it and publish it on GitHub as perhaps others might
 find it useful as well.
+
+You can look at the included `docker-compose.yml` for an example how to run it yourself. A functional version is available on https://fical.nikolak.com/
+but it comes without any guarantees of uptime or similar.
+
+Note: During my testing I've noticed that google calendar is being weird, and seems to reject long urls - which are completely within the spec. Google
+seems to impose limit of 256chars for the URL length, which are very easy to reach with the base64 encoding this uses.
+
+I may add a persistent storage for allowing shorter URLs, but for now I do not have a use case for this - if someone wants to contribute it, feel free to do so.
+
+As a workaround URL shortener like bitly or similar will work just fine.
 
 # License
 

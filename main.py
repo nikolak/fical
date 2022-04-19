@@ -16,8 +16,11 @@ def index():
 
 @app.get("/calendar/{b64url}/{b64allowlist}/filtered.ics")
 async def get_calendar(b64url: str, b64allowlist: str):
-    url = base64.b64decode(b64url)
-    allowlist = base64.b64decode(b64allowlist).decode("utf-8").split(",")
+    try:
+        url = base64.b64decode(b64url)
+        allowlist = base64.b64decode(b64allowlist).decode("utf-8").split(",")
+    except:
+        raise HTTPException(status_code=400, detail="Invalid base64 data.")
 
     try:
         remote_cal = requests.get(url, timeout=REQUEST_TIMEOUT).text
@@ -25,7 +28,7 @@ async def get_calendar(b64url: str, b64allowlist: str):
         raise HTTPException(status_code=400,
                             detail=f"Timed out while getting the URL, timeout is {REQUEST_TIMEOUT} seconds.")
     except requests.RequestException as e:
-        raise HTTPException(status_code=400, detail="Error getting the URL")
+        raise HTTPException(status_code=400, detail="Error getting the URL.")
     except:
         raise HTTPException(status_code=500, detail="Error while fetching calendar contents.")
 
