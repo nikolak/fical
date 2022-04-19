@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>fiCal - Simple iCal filtering</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<body>
+
+<main>
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+        <div class="row align-items-center g-lg-5 py-5">
+            <div class="col-lg-7 text-center text-lg-start">
+                <h1 class="display-4 fw-bold lh-1 mb-3">Simple iCal filtering</h1>
+                <p class="col-lg-10 fs-4">Filter unwanted iCal events.</p>
+                <p class="col-lg-10 fs-4">On the right side enter the calendar subscription URL, then enter which words
+                    are allowed to be in the event names, everything else will be filtered out,
+                    and subscribe the newly generated URL in your calendar app.</p>
+            </div>
+            <div class="col-md-10 mx-auto col-lg-5">
+                <form class="p-4 p-md-5 border rounded-3 bg-light">
+                    <div class="form-floating mb-3">
+                        <input type="url" class="form-control" id="calurl" oninput="onInputHandler()">
+                        <label for="calurl">Calendar URL</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="allowlist" oninput="onInputHandler()">
+                        <label for="allowlist">Allowlist</label>
+                        <small class="text-muted">Use comma to separate multiple filters</a></small>
+                    </div>
+                    <hr class="my-4">
+                    <div class="form-floating mb-3">
+                        <input type="url" class="form-control" id="filteredurl" readonly>
+                        <label for="filteredurl">New filtered calendar URL</label>
+                    </div>
+                    <button type="button" class="w-100 btn btn-lg btn-primary" id="copybtn" onclick="copy()" disabled>
+                        Copy to clipboard
+                    </button>
+
+                    <small class="text-muted">If the button does not work you can select the new URL and
+                        copy it
+                        manually</small>
+                </form>
+            </div>
+            <div class="col-lg-7 text-center text-lg-start">
+                <p class="col-lg-6 fs-4">How does it work?</p>
+                <p class="lead text-muted">On every request the remote iCal file is fetched directly from the remote
+                    server and parsed, after that the calendar is returned as-is with only events that don't contain any
+                    of the specified words in the event name filtered out. All the data about the request is stored in
+                    the URL and
+                    is never stored on the server</p>
+                <p class="lead text-muted">The code is open source under MIT license and available on <a
+                        href="https://github.com/nikolak/fical">GitHub</a></p>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+<script>
+
+    function onInputHandler() {
+        calurlstr = document.getElementById('calurl').value
+        allowliststr = document.getElementById('allowlist').value
+
+        if (calurlstr && allowliststr) {
+            newURL = window.location.origin + "/calendar/" + btoa(calurlstr) + "/" + btoa(allowliststr) + "/filtered.ics"
+        } else {
+            newURL = ""
+        }
+        document.getElementById("filteredurl").value = newURL
+        document.getElementById('copybtn').disabled = !newURL
+    }
+
+    function copy() {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(document.getElementById("filteredurl").value).then(() => {
+                document.getElementById('copybtn').value = "URL Copied!";
+                alert("Copied!")
+            }, (err) => {
+                document.getElementById('copybtn').value = "Failed to copy the text to clipboard."
+            });
+        }
+    }
+
+
+</script>
+
+</body>
+</html>
