@@ -17,8 +17,8 @@ def index():
 @app.get("/calendar/{b64url}/{b64allowlist}/filtered.ics")
 async def get_calendar(b64url: str, b64allowlist: str):
     try:
-        url = base64.b64decode(b64url)
-        allowlist = base64.b64decode(b64allowlist).decode("utf-8").split(",")
+        url = base64.urlsafe_b64decode(b64url)
+        allowlist = base64.urlsafe_b64decode(b64allowlist).decode("utf-8").split(",")
     except:
         raise HTTPException(status_code=400, detail="Invalid base64 data.")
 
