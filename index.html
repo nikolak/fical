@@ -76,7 +76,7 @@
         allowliststr = document.getElementById('allowlist').value
 
         if (calurlstr && allowliststr) {
-            newURL = window.location.origin + "/calendar/" + btoa(calurlstr) + "/" + btoa(allowliststr) + "/filtered.ics"
+            newURL = window.location.origin + "/calendar/" + base64ToBase64url(btoa(calurlstr)) + "/" + base64ToBase64url(btoa(allowliststr)) + "/filtered.ics"
         } else {
             newURL = ""
         }
@@ -93,6 +93,13 @@
                 document.getElementById('copybtn').value = "Failed to copy the text to clipboard."
             });
         }
+    }
+    function base64ToBase64url(input) {
+      // Replace non-url compatible chars with base64url standard chars and remove leading =
+      return input
+        .replace(/\+/g, '_')
+        .replace(/\//g, '-')
+        .replace(/=+$/g, '');
     }
 
 
